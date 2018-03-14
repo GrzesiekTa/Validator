@@ -8,11 +8,7 @@ class Database
 	protected $password='';
 	protected $stmt;
 	protected $table;
-
-
 	public $pdo;
-
-
 	public function __construct(){
 		try {
 			$this->pdo=new PDO("mysql:host=$this->host;dbname=$this->db", $this->username, $this->password);
@@ -25,8 +21,6 @@ class Database
 			die("Blad polaczenia z baza danych ! skontaktuj sie z adminem");
 		}
 	}
-	 
-
 	public function table($table)
 	{
 		$this->table=$table;
@@ -45,8 +39,6 @@ class Database
 		$this->stmt->execute([$value]);
 		return $this;
 	}
-
-
 	public function count()
 	{
 		return $this->stmt->rowCount();

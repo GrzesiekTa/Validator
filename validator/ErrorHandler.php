@@ -13,19 +13,19 @@ class ErrorHandler
 		}
 	}
 
-	public function all($key=null)
+	public function allErrors($key=null)
 	{
 		return isset($this->errors[$key]) ? $this->errors[$key]: $this->errors;
 	}
 
 	public function hasErrors()
 	{
-		return count ($this->all())? true:false;
+		return count ($this->allErrors())? true:false;
 	}
 
-	public function first($key)
+	public function firstError($key)
 	{
-		return isset($this->all()[$key][0]) ? $this->all()[$key][0] : '';
+		return isset($this->allErrors()[$key][0]) ? $this->allErrors()[$key][0] : '';
 	}
 }
  ?>

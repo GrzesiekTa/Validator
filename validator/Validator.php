@@ -2,7 +2,7 @@
 
 class Validator {
 	protected $errorHandler;
-	protected $items;
+	protected $validateItems;
 
 	protected $rules = ['required', 'minlenght', 'maxlenght', 'email', 'alnum', 'match', 'unique', 'post_code', 'url', 'captcha', 'year18', 'nip', 'regon','phone','is_integer','date'];
 
@@ -26,28 +26,28 @@ class Validator {
 	];
 
 
-	function __construct(Database $db, ErrorHandler $errorHandler)
+	function __construct(Database $database, ErrorHandler $errorHandler)
 	{
-		$this->db=$db;
+		$this->database=$database;
 		$this->errorHandler=$errorHandler;
 	}
 
-	public function check($items, $rules) {
+	public function check($validateItems, $rules) {
 
-		$this->items = $items;
+		$this->validateItems = $validateItems;
 
-		foreach ($rules as $item => $require_rule) {
+		foreach ($rules as $itemName => $requireRule) {
 			@$this->validate([
-				'field' => $item,
-				'value' => $items[$item],
-				'rules' => $require_rule,
+				'field' => $itemName,
+				'value' => $validateItems[$itemName],
+				'rules' => $requireRule,
 			]);
 		}
 		return $this;
 	}
 
 	public function old_value($value) {
-		echo $this->items[$value];
+		echo $this->validateItems[$value];
 	}
 
 	public function fails() {
@@ -66,11 +66,8 @@ class Validator {
 			echo "walidujac pole  <b>{$field}</b> pole musisz przypisać require true or false";
 			die;
 		}
-		//jesli require == false pominiecie wszystkich innych metod na podstawia sprawdzenia pola przez prywatna metode w klasie
-		if ($item['rules']['required'] != 1 && $this->requiredINClass($item['value']) == false) {
-
-
-		} else {
+		//walidator odpolony jest tylko w przypadku gdy pole ma require true lub require false ale nie jest puste
+		if ($item['rules']['required'] == 1 || ($item['rules']['required'] ==0 && $this->CheckValueHandler($item['value']) == 1)) {
 			foreach ($item['rules'] as $rule => $satisifer) {
 				if (in_array($rule, $this->rules)) {
 					if (!call_user_func_array([$this, $rule], [$field, $item['value'], $satisifer])) {
@@ -81,20 +78,18 @@ class Validator {
 					}
 				}
 			}
-		}
+		} 
 	}
 
-	private function requiredINClass($value) {
+	//=========================================================================================================================
+	private function CheckValueHandler($value) {
 		if (!is_null($value) && (trim($value) != '')) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-
-	//=============
-
-
+	//=========================================================================================================================
 	protected function required($field, $value, $satisifer) {
 		if (!is_null($value) && (trim($value) != '')) {
 			return true;
@@ -102,42 +97,41 @@ class Validator {
 			return false;
 		}
 	}
-
+	//=========================================================================================================================
 	protected function minlenght($field, $value, $satisifer) {
 		return mb_strlen($value) >= $satisifer;
 	}
-
+	//=========================================================================================================================
 	protected function maxlenght($field, $value, $satisifer) {
 		return mb_strlen($value) <= $satisifer;
 	}
-
+	//=========================================================================================================================
 	protected function email($field, $value, $satisifer) {
 		return filter_var($value, FILTER_VALIDATE_EMAIL);
 	}
-
+	//=========================================================================================================================
 	protected function alnum($field, $value, $satisifer) {
 		return ctype_alnum($value);
 	}
 	protected function match($field, $value, $satisifer) {
-		return $value === $this->items[$satisifer];
+		return $value === $this->validateItems[$satisifer];
 	}
-
+	//=========================================================================================================================
 	protected function unique($field, $value, $satisifer) {
-	
-		return !$this->db->table($satisifer)->exists([
+		return !$this->database->table($satisifer)->exists([
 			$field=>$value
 		]);
 	}
-
-	
+	//=========================================================================================================================
 	protected function post_code($field, $value, $satisifer) {
 		$value = preg_replace("([-]+)", "", $value);
 		return preg_match('/^[0-9]{2}-?[0-9]{3}$/Du', $value);
 	}
-
+	//=========================================================================================================================
 	protected function url($field, $value, $satisifer) {
 		return filter_var($value, FILTER_VALIDATE_URL);
 	}
+	//=========================================================================================================================
 	protected function captcha($field, $value, $satisifer) {
 		if (in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1'))) {
 			$sekret = "6Lci3BoTAAAAAKBdjxF-5gyYkCX9UtSvZYW_Gx71"; //localhost
@@ -150,7 +144,7 @@ class Validator {
 
 		return $answer->success;
 	}
-
+	//=========================================================================================================================
 	protected function year18($field, $value, $satisifer) {
 
 		if ($this->alnum($value, null, null) === false) {
@@ -159,8 +153,6 @@ class Validator {
 
 			$check_18_years_old = date("Y") - $value;
 
-			echo $check_18_years_old;
-
 			if ($check_18_years_old >= 18) {
 				return true;
 			} else {
@@ -168,8 +160,7 @@ class Validator {
 			}
 		}
 	}
-
-	//===================================================
+	//=========================================================================================================================
 	protected function nip($field, $value, $satisifer) {
 		$value = preg_replace("/[^0-9]+/", "", $value);
 		if (strlen($value) != 10) {
@@ -189,7 +180,7 @@ class Validator {
 		}
 		return false;
 	}
-	//===================================================
+	//=========================================================================================================================
 	protected function regon($field, $value, $satisifer) {
 		if (strlen($value) != 9) {
 			return false;
@@ -207,7 +198,7 @@ class Validator {
 		}
 		return false;
 	}
-
+	//=========================================================================================================================
 	protected function phone($field, $value, $satisifer) {
 
 		$value = preg_replace("([- ]+)", "", $value);
@@ -215,7 +206,7 @@ class Validator {
 
 		return preg_match($reg, $value);
 	}
-
+	//=========================================================================================================================
 	protected function is_integer($field, $value, $satisifer) {
 		return is_numeric($value);
 	}
