@@ -1,5 +1,4 @@
 <?php 
-
 require_once 'database/Database.php';
 require_once 'validator/Validator.php';
 require_once 'validator/ErrorHandler.php';
@@ -11,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$validator = new Validator($database,$errorHandler);
 		$validation = $validator->check($_POST, [
 			'nick' => [
-				'required' => false,
+				'required' => true,
 				'maxlenght' => 12,
 				'minlenght' => 4,
 				'unique' => 'users',
@@ -24,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			],
 			'city' => [
 				'required' => true,
-				'maxlenght' => 100,
+				'maxlenght' => 30,
 				'minlenght' => 3,
 			],
 			'postal_code' => [
@@ -50,13 +49,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		]);
 
 	if ($validation->fails()) {
-		echo('Wystąpiły błędy popraw formularz');
 		// echo '<pre>';
 		// var_dump($errorHandler->allErrors());
 		// echo '</pre>';
 
 	} else {
-		echo('Zarejestrowano poprawnie sprawdz emaila');
+		$password=password_hash($_POST['password'],PASSWORD_DEFAULT);
+		$query = $pdo->prepare("INSERT INTO users (id, nick, email, city, postal_code, password) VALUES (NULL,:nick,:email,:city,:postal_code,:password)");
+		$query->bindParam(':nick', $_POST['nick'],PDO::PARAM_STR);
+		$query->bindParam(':email', $_POST['email'],PDO::PARAM_STR);
+		$query->bindParam(':city', $_POST['city'],PDO::PARAM_STR);
+		$query->bindParam(':postal_code', $_POST['postal_code'],PDO::PARAM_STR);
+		$query->bindParam(':password', $password,PDO::PARAM_STR);
+		$query->execute();
+		$success=true;
 	}
 
 
@@ -70,9 +76,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <main>
+	<?php if (isset($success)): ?>
+		<div class="alert alert-success fade in alert-dismissible show" style="margin-top:18px;">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true" style="font-size:20px">×</span>
+			</button><strong>Success!</strong> Zarejestrowales sie poprawnie
+		</div>
+	<?php endif ?>
     <section class="container">
-        <div class="card text-white bg-primary mb-3">
-            <div class="card-header">Rejestracja</div>
+        <div class="card">
+            <div class="card-header text-white bg-primary mb-3">Rejestracja</div>
             <div class="card-body">
                 <p>Rejestracja jest darmowa.</p>
                 <p>Po rejestracji wykonaj dwupoziomową aktywację konta.</p>
@@ -81,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="card text-center">
             <div class="card-header bg-primary text-white">
-                Formularz rejestracji
+                <h3>Formularz rejestracji</h3>
             </div>
             <div class="card-body">
                 <form method="post">
@@ -167,7 +180,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </section>
 </main>
-
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA01CSJu8MXF7Ce7GyNvPtCo2aJzy2eT10&libraries=places&sensor=false&libraries=places&region=PL"></script>
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <script>
