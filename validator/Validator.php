@@ -4,7 +4,7 @@ class Validator {
 	protected $errorHandler;
 	protected $validateItems;
 
-	protected $rules = ['required', 'minlenght', 'maxlenght', 'email', 'alnum', 'match', 'unique', 'post_code', 'url', 'captcha', 'year18', 'nip', 'regon','phone','is_integer','date'];
+	protected $rules = ['required', 'minlenght', 'maxlenght', 'email', 'alnum', 'match', 'unique', 'post_code', 'url', 'captcha', 'year18', 'nip', 'regon','phone','is_integer','date','max_file_size','is_img'];
 
 	public $messages = [
 		'required' => 'Pole :field jest wymagane',
@@ -22,14 +22,14 @@ class Validator {
 		'regon' => 'Regon nie jest poprawny',
 		'phone' => "Numer tel nie jest poprawny: przykład 500-500-500, 34-315-43-34,500500500, 343154334",
 		'is_integer' =>"To pole musi być liczbą",
-		'date'=>'Nie poprawny format daty'
+		'date'=>'Nie poprawny format daty',
+		'max_file_size'=>"za duzy plik max :satisifer kb",
+		'is_img'=>'Tylko jpeg, pjpeg, gif, png',
 	];
-
-
-	function __construct(Database $database, ErrorHandler $errorHandler)
+	function __construct(Database $database,ErrorHandler $errorHandler)
 	{
-		$this->database=$database;
 		$this->errorHandler=$errorHandler;
+		$this->database=$database;
 	}
 
 	public function check($validateItems, $rules) {
@@ -49,6 +49,11 @@ class Validator {
 	public function old_value($value) {
 		echo $this->validateItems[$value];
 	}
+	public function select_old_value($value,$itemName) {
+		if (isset($this->validateItems[$itemName])&&$this->validateItems[$itemName]==$value) {
+			echo 'selected';
+		}
+	}
 
 	public function fails() {
 		return $this->errorHandler->hasErrors();
@@ -67,7 +72,7 @@ class Validator {
 			die;
 		}
 		//walidator odpolony jest tylko w przypadku gdy pole ma require true lub require false ale nie jest puste
-		if ($item['rules']['required'] == 1 || ($item['rules']['required'] ==0 && $this->CheckValueHandler($item['value']) == 1)) {
+		if ($item['rules']['required'] == 1 || ($item['rules']['required'] ==0 && $this->required(null,$item['value'],null) == 1)) {
 			foreach ($item['rules'] as $rule => $satisifer) {
 				if (in_array($rule, $this->rules)) {
 					if (!call_user_func_array([$this, $rule], [$field, $item['value'], $satisifer])) {
@@ -80,21 +85,25 @@ class Validator {
 			}
 		} 
 	}
-
-	//=========================================================================================================================
-	private function CheckValueHandler($value) {
-		if (!is_null($value) && (trim($value) != '')) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 	//=========================================================================================================================
 	protected function required($field, $value, $satisifer) {
-		if (!is_null($value) && (trim($value) != '')) {
+		if (!is_array($value)) {
+			if (!is_null($value) && (trim($value) != '')) {
+				return true;
+			} else {
+				return false;
+			}
+		}else{
+			//type file
+			if (isset($value['size'])) {
+				if ($value['size']>0) {
+					return true;
+				}else{
+					return false;
+				}
+			}
+			//array
 			return true;
-		} else {
-			return false;
 		}
 	}
 	//=========================================================================================================================
@@ -214,7 +223,23 @@ class Validator {
 	protected function date($field, $value, $satisifer) {
 		return strtotime($value);
 	}
+	//=========================================================================================================================
+	public function max_file_size($field, $value, $satisifer) {
+		if ($_FILES[$field]["size"] > $satisifer) {
+			return false;
+		}
+		return true;
+	}
+
+	//=========================================================================================================================
+	public function is_img($field, $value, $satisifer) {
+		if ((($_FILES[$field]["type"] !== "image/jpeg" && $_FILES[$field]["type"] !== "image/pjpeg" && $_FILES[$field]["type"] !== "image/gif" && $_FILES[$field]["type"] !== "image/x-png"))) {
+			return false;
+		}
+		return true;
+	}
+
+
 
 }
 ?>
-

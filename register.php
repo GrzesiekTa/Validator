@@ -8,6 +8,15 @@ $database=new Database;
 $pdo = $database->pdo;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {	
 		$validator = new Validator($database,$errorHandler);
+
+        $validation = $validator->check($_FILES,[
+            'image_upload_box'=>[
+                'required' => true,
+                'is_img' => true,
+                'max_file_size'=>4000000,
+            ]
+        ]);
+
 		$validation = $validator->check($_POST, [
 			'nick' => [
 				'required' => true,
@@ -43,6 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				'captcha' => true,
 				'required' => true,
 			],
+            'select_test' => [
+                'required' => true,
+                'is_integer'=>true
+            ],
 			'regulamin' => [
 				'required' => true,
 			],
@@ -97,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h3>Formularz rejestracji</h3>
             </div>
             <div class="card-body">
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <input class="form-control" type="text" name="nick" id="nick" value="<?php if ($errorHandler->hasErrors()) {$validator->old_value('nick');}?>">
                         <label for="nick">nick <span class="required_symbol">*</span></label>
@@ -150,6 +163,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php if ($errorHandler->hasErrors()&&!empty($errorHandler->firstError('repeat_password'))): ?>
                         <div class="bg-danger text-white">
                             <?php echo $errorHandler->firstError('repeat_password') ?>
+                        </div>
+                        <?php endif ?>
+                    </div>
+                    <div class="form-group">
+                        <label class="btn btn-default btn-file">
+                            <input name="image_upload_box" type="file" id="image_upload_box" size="40" />
+                        </label>
+                        <?php if ($errorHandler->hasErrors()&&!empty($errorHandler->firstError('image_upload_box'))): ?>
+                        <div class="bg-danger text-white">
+                            <?php echo $errorHandler->firstError('image_upload_box') ?>
+                        </div>
+                        <?php endif ?>
+                        <div clas="showPhoto">
+                            <img class="img-responsive" src="" alt="" id="showPhoto">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                     
+                        <select class="form-control" id="select_test" name="select_test">
+                            <option value="">---------------</option>
+                            <option <?php if ($errorHandler->hasErrors()) {$validator->select_old_value(1,'select_test');}?> value="1">1</option>
+                            <option <?php if ($errorHandler->hasErrors()) {$validator->select_old_value(2,'select_test');}?> value="2">2</option>
+                        </select>
+                        <label for="select_test">select_test:</label>
+                        <?php if ($errorHandler->hasErrors()&&!empty($errorHandler->firstError('select_test'))): ?>
+                        <div class="bg-danger text-white">
+                            <?php echo $errorHandler->firstError('select_test') ?>
                         </div>
                         <?php endif ?>
                     </div>
