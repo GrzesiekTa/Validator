@@ -1,10 +1,17 @@
 <?php
 
+function dump($asd) {
+	echo '<pre>';
+	var_dump($asd);
+	echo '</pre>';
+
+}
+
 class Validator {
 	protected $errorHandler;
 	protected $validateItems;
 
-	protected $rules = ['required', 'minlenght', 'maxlenght', 'email', 'alnum', 'match', 'unique', 'post_code', 'url', 'captcha', 'year18', 'nip', 'regon','phone','is_integer','date','max_file_size','is_img'];
+	protected $rules = ['required', 'minlenght', 'maxlenght', 'email', 'alnum', 'match', 'unique', 'post_code', 'url', 'captcha', 'year18', 'nip', 'regon', 'phone', 'is_integer', 'date', 'max_file_size', 'is_img'];
 
 	public $messages = [
 		'required' => 'Pole :field jest wymagane',
@@ -21,27 +28,49 @@ class Validator {
 		'nip' => 'Nip nie jest poprawny',
 		'regon' => 'Regon nie jest poprawny',
 		'phone' => "Numer tel nie jest poprawny: przykład 500-500-500, 34-315-43-34,500500500, 343154334",
-		'is_integer' =>"To pole musi być liczbą",
-		'date'=>'Nie poprawny format daty',
-		'max_file_size'=>"za duzy plik max :satisifer kb",
-		'is_img'=>'Tylko jpeg, pjpeg, gif, png',
+		'is_integer' => "To pole musi być liczbą",
+		'date' => 'Nie poprawny format daty',
+		'max_file_size' => "za duzy plik max :satisifer kb",
+		'is_img' => 'Tylko jpeg, pjpeg, gif, png',
 	];
-	function __construct(Database $database,ErrorHandler $errorHandler)
-	{
-		$this->errorHandler=$errorHandler;
-		$this->database=$database;
+	function __construct(Database $database, ErrorHandler $errorHandler) {
+		$this->errorHandler = $errorHandler;
+		$this->database = $database;
 	}
 
 	public function check($validateItems, $rules) {
 
 		$this->validateItems = $validateItems;
 
-		foreach ($rules as $itemName => $requireRule) {
+		foreach ($rules as $itemName => $requireRuleString) {
+
+			$requireRuleSepareteArray = [];
+
+			$firstSeparator = explode("|", $requireRuleString);
+
+			foreach ($firstSeparator as $key => $firstSeparatorValue) {
+				$secondSeparator = explode(":", $firstSeparatorValue);
+<<<<<<< HEAD
+=======
+				$requireRuleSepareteArray[$secondSeparator[0]] = $secondSeparator[1];
+>>>>>>> cbe2dc4e9210af5661f03016cbdc2c8e1a316aaf
+
+				if ($secondSeparator[1] == 'true') {
+					$requireRuleSepareteArray[$secondSeparator[0]] = true;
+				} elseif ($secondSeparator[1] == 'false') {
+					$requireRuleSepareteArray[$secondSeparator[0]] = false;
+				} else {
+					$requireRuleSepareteArray[$secondSeparator[0]] = $secondSeparator[1];
+				}
+			}
+			//========================================================
 			@$this->validate([
 				'field' => $itemName,
 				'value' => $validateItems[$itemName],
-				'rules' => $requireRule,
+				'rules' => $requireRuleSepareteArray,
 			]);
+
+			$requireRuleSepareteArray = null;
 		}
 		return $this;
 	}
@@ -49,8 +78,8 @@ class Validator {
 	public function old_value($value) {
 		echo $this->validateItems[$value];
 	}
-	public function select_old_value($value,$itemName) {
-		if (isset($this->validateItems[$itemName])&&$this->validateItems[$itemName]==$value) {
+	public function select_old_value($value, $itemName) {
+		if (isset($this->validateItems[$itemName]) && $this->validateItems[$itemName] == $value) {
 			echo 'selected';
 		}
 	}
@@ -72,7 +101,7 @@ class Validator {
 			die;
 		}
 		//walidator odpolony jest tylko w przypadku gdy pole ma require true lub require false ale nie jest puste
-		if ($item['rules']['required'] == 1 || ($item['rules']['required'] ==0 && $this->required(null,$item['value'],null) == 1)) {
+		if ($item['rules']['required'] == 1 || ($item['rules']['required'] == 0 && $this->required(null, $item['value'], null) == 1)) {
 			foreach ($item['rules'] as $rule => $satisifer) {
 				if (in_array($rule, $this->rules)) {
 					if (!call_user_func_array([$this, $rule], [$field, $item['value'], $satisifer])) {
@@ -83,7 +112,7 @@ class Validator {
 					}
 				}
 			}
-		} 
+		}
 	}
 	//=========================================================================================================================
 	protected function required($field, $value, $satisifer) {
@@ -93,12 +122,12 @@ class Validator {
 			} else {
 				return false;
 			}
-		}else{
+		} else {
 			//type file
 			if (isset($value['size'])) {
-				if ($value['size']>0) {
+				if ($value['size'] > 0) {
 					return true;
-				}else{
+				} else {
 					return false;
 				}
 			}
@@ -128,7 +157,7 @@ class Validator {
 	//=========================================================================================================================
 	protected function unique($field, $value, $satisifer) {
 		return !$this->database->table($satisifer)->exists([
-			$field=>$value
+			$field => $value,
 		]);
 	}
 	//=========================================================================================================================
@@ -238,8 +267,6 @@ class Validator {
 		}
 		return true;
 	}
-
-
 
 }
 ?>
