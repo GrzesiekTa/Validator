@@ -50,6 +50,10 @@ class Validator {
 
 			foreach ($firstSeparator as $key => $firstSeparatorValue) {
 				$secondSeparator = explode(":", $firstSeparatorValue);
+<<<<<<< HEAD
+=======
+				$requireRuleSepareteArray[$secondSeparator[0]] = $secondSeparator[1];
+>>>>>>> cbe2dc4e9210af5661f03016cbdc2c8e1a316aaf
 
 				if ($secondSeparator[1] == 'true') {
 					$requireRuleSepareteArray[$secondSeparator[0]] = true;
