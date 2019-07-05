@@ -1,7 +1,13 @@
-<?php 
-require_once 'database/Database.php';
-$database=new Database;
-$pdo=$database->pdo;
+<?php
+
+require_once 'vendor/autoload.php';
+
+use App\ErrorHandler\ErrorHandler;
+use App\Validator\Validator;
+use App\Database\Database;
+
+$database = new Database;
+$pdo = $database->pdo;
 
 function tableExists($pdo, $table) {
     try {
@@ -12,9 +18,9 @@ function tableExists($pdo, $table) {
     return $result !== FALSE;
 }
 
-if (tableExists($pdo,'users')) {
+if (tableExists($pdo, 'users')) {
     echo '<h1>Tabela users juz istnieje</h1>';
-}else{
+} else {
     $query = $pdo->prepare("CREATE TABLE `users` (
      `id` int(11) NOT NULL AUTO_INCREMENT,
      `nick` varchar(12) COLLATE utf8_polish_ci NOT NULL,
