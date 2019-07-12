@@ -37,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ]);
     
     if ($validation->fails()) {
-        // echo '<pre>';
-        // var_dump($errorHandler->allErrors());
-        // echo '</pre>';
+//         echo '<pre>';
+//         var_dump($errorHandler->allErrors());
+//         echo '</pre>';
     } else {
         $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
         $query = $pdo->prepare("INSERT INTO users (id, nick, email, city, postal_code, password) VALUES (NULL,:nick,:email,:city,:postal_code,:password)");
@@ -55,9 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
     <head>
-        <meta charset="UTF-8">
+         <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Simple validator</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     </head>

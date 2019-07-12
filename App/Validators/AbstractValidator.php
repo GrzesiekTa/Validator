@@ -2,6 +2,8 @@
 
 namespace App\Validators;
 
+use App\Database\Database;
+
 abstract class AbstractValidator {
 
     /**
@@ -17,24 +19,33 @@ abstract class AbstractValidator {
     protected $field;
 
     /**
-     * @var string 
+     * @var mixed 
      */
     protected $value;
 
     /**
      * @var string 
      */
-    protected $satisifier;
+    protected $satisfier;
+
+    /**
+     * validateItems collection
+     * 
+     * @var array 
+     */
+    protected $validateItems;
 
     /**
      * @param string $field
-     * @param string $value
-     * @param string $satisifier
+     * @param mixed $value
+     * @param string $satisfier
+     * @param array $validateItems
      */
-    public function __construct(string $field, string $value, string $satisifier) {
+    public function __construct(string $field, $value, string $satisfier, array $validateItems) {
         $this->field = $field;
         $this->value = $value;
-        $this->satisifier = $satisifier;
+        $this->satisfier = $satisfier;
+        $this->validateItems = $validateItems;
     }
 
     /**
@@ -52,4 +63,29 @@ abstract class AbstractValidator {
      * @return bool
      */
     abstract public function valid(): bool;
+
+    /**
+     * checking if value(array or string) in field is empty
+     * 
+     * @return boolean
+     */
+    public function valueIsEmpty(): bool {
+        $value = $this->value;
+
+        if ((is_array($value) && empty(array_filter($value)) ) || (!is_array($value) && trim($value) == '')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * get data base connection
+     * 
+     * @return Database
+     */
+    protected function getDataBase(): Database {
+        return new Database;
+    }
+
 }

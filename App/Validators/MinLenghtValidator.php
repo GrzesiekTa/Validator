@@ -14,7 +14,7 @@ class MinLenghtValidator extends AbstractValidator {
     /**
      * @var string 
      */
-    protected $errorMessage = 'Pole :field musi mieæ min :satisifer znaków';
+    protected $errorMessage = 'Pole :field musi mieæ min :satisfier znaków';
 
     /**
      * valid value 
@@ -22,7 +22,7 @@ class MinLenghtValidator extends AbstractValidator {
      * @return bool
      */
     public function valid(): bool {
-        return mb_strlen($this->value) >= $this->satisifer;
+        return mb_strlen($this->value) >= $this->satisfier;
     }
 
 }

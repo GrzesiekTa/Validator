@@ -14,7 +14,7 @@ class IntegerValidator extends AbstractValidator {
     /**
      * @var string 
      */
-    protected $errorMessage = 'To pole musi być liczbą';
+    protected $errorMessage = 'To pole musi byc liczba�';
 
     /**
      * valid value 
@@ -22,7 +22,7 @@ class IntegerValidator extends AbstractValidator {
      * @return bool
      */
     public function valid(): bool {
-        return is_integer($this->value);
+        return filter_var($this->value, FILTER_VALIDATE_INT);
     }
 
 }

@@ -4,17 +4,17 @@ namespace App\Validators;
 
 use App\Validators\AbstractValidator;
 
-class MaxLenghtValidator extends AbstractValidator {
+class DateValidator extends AbstractValidator {
 
     /**
      * validator key
      */
-    CONST KEY = 'maxlenght';
+    CONST KEY = 'date';
 
     /**
      * @var string 
      */
-    protected $errorMessage = 'Pole :field musi mieæ max :satisfier znaków';
+    protected $errorMessage = 'Nie poprawny format daty';
 
     /**
      * valid value 
@@ -22,7 +22,7 @@ class MaxLenghtValidator extends AbstractValidator {
      * @return bool
      */
     public function valid(): bool {
-        return mb_strlen($this->value) <= $this->satisfier;
+        return strtotime($value);
     }
 
 }
