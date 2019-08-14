@@ -78,7 +78,7 @@ class Database {
      * 
      * @return $this
      */
-    public function where(string $field, string $operator, string $value): Database {
+    public function where(string $field, string $operator, ?string $value): Database {
         $sql = "SELECT * FROM {$this->table} WHERE {$field} {$operator} ?";
         $this->stmt = $this->pdo->prepare($sql);
         $this->stmt->execute([$value]);

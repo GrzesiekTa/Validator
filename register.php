@@ -11,21 +11,22 @@ $database = new Database;
 $pdo = $database->pdo;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $validator = new Validator($database, $errorHandler);
+    $validator = new Validator($errorHandler);
     
     $validation = $validator->addCustomErrrorMessages([
         'nick' => [
-            'required' => 'Pole :field jest kurwa wymagane',
-            'minlenght' => 'Pole :field musi mieć min :satisifer znakow i chuj !!!!!'
+            'required' => 'Pole :field jest wymagane heheheh',
+            'minlenght' => 'Pole :field musi miec min :satisifer znakow i koniec !!!!!'
+        ],
+        'image_upload_box' => [
+            'required' => 'HAAAAAAAAAAAAAAAAAA',
+            'isImg' => 'panie to nie zdjecie',
         ]
     ]);  
     
-    $validation = $validator->check($_FILES, [
-        'image_upload_box' => 'required:true|isImg:true|maxFileSize:4000000',
-    ]);
 
     $validation = $validator->check($_POST, [
-        'nick' => 'required:true|maxlenght:12|minlenght:4|unique:users',
+        'nick' => 'required:1|maxlenght:12|minlenght:4|unique:users',
         'email' => 'required:true|maxlenght:100|email:true|unique:users',
         'city' => 'required:true|maxlenght:30|minlenght:3',
         'postal_code' => 'required:true|postCode:true',
@@ -34,6 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'g-recaptcha-response' => 'required:true|captcha:true',
         'select_test' => 'required:true|isInteger:true',
         'regulamin' => 'required:true',
+    ]);
+    $validation = $validator->check($_FILES, [
+        'image_upload_box' => 'required:1|isImg:true|maxFileSize:4000000',
     ]);
     
     if ($validation->fails()) {

@@ -24,7 +24,11 @@ class IsImgValidator extends AbstractValidator {
     public function valid(): bool {
         $field = $this->field;
 
-        if ((($_FILES[$field]["type"] !== "image/jpeg" && $_FILES[$field]["type"] !== "image/pjpeg" && $_FILES[$field]["type"] !== "image/gif" && $_FILES[$field]["type"] !== "image/x-png"))) {
+        if (!isset($_FILES[$field]["type"])) {
+            return false;
+        }
+
+        if (!in_array($_FILES[$field]["type"], ['image/jpeg', 'image/pjpeg', 'image/gif', 'image/x-png'])) {
             return false;
         }
 

@@ -2,17 +2,15 @@
 
 require_once 'vendor/autoload.php';
 
-use App\ErrorHandler\ErrorHandler;
-use App\Validator\Validator;
 use App\Database\Database;
 
 $database = new Database;
 $pdo = $database->pdo;
 
-function tableExists($pdo, $table) {
+function tableExists(PDO $pdo, string $table): bool {
     try {
         $result = $pdo->query("SELECT 1 FROM $table LIMIT 1");
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
         return FALSE;
     }
     return $result !== FALSE;

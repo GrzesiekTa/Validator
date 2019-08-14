@@ -53,7 +53,7 @@ abstract class AbstractValidator {
      * 
      * @return string
      */
-    public function getErrorMessage() {
+    public function getErrorMessage(): string {
         return $this->errorMessage;
     }
 
