@@ -30,6 +30,8 @@ class ErrorHandler {
     }
 
     /**
+     * check errors
+     * 
      * @return bool
      */
     public function hasErrors(): bool {
@@ -37,11 +39,14 @@ class ErrorHandler {
     }
 
     /**
+     * firsterror
+     * 
      * @param string $key
-     * @return type
+     * 
+     * @return string|null
      */
-    public function firstError(string $key) {
-        return isset($this->allErrors()[$key][0]) ? $this->allErrors()[$key][0] : '';
+    public function firstError(string $key):?string {
+        return $this->allErrors()[$key][0] ?? null;
     }
 
 }
