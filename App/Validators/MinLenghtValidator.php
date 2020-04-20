@@ -4,25 +4,26 @@ namespace App\Validators;
 
 use App\Validators\AbstractValidator;
 
-class MinLenghtValidator extends AbstractValidator {
+class MinLenghtValidator extends AbstractValidator
+{
 
     /**
      * validator key
      */
-    CONST KEY = 'minlenght';
+    const KEY = 'minlenght';
 
     /**
      * @var string 
      */
-    protected $errorMessage = 'Pole :field musi mieæ min :satisfier znaków';
+    protected $errorMessage = 'Pole :field musi miec min :satisfier znakow';
 
     /**
      * valid value 
      * 
      * @return bool
      */
-    public function valid(): bool {
+    public function valid(): bool
+    {
         return mb_strlen($this->value) >= $this->satisfier;
     }
-
 }

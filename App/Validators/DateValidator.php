@@ -4,12 +4,13 @@ namespace App\Validators;
 
 use App\Validators\AbstractValidator;
 
-class DateValidator extends AbstractValidator {
+class DateValidator extends AbstractValidator
+{
 
     /**
      * validator key
      */
-    CONST KEY = 'date';
+    const KEY = 'date';
 
     /**
      * @var string 
@@ -21,8 +22,8 @@ class DateValidator extends AbstractValidator {
      * 
      * @return bool
      */
-    public function valid(): bool {
-        return strtotime($value);
+    public function valid(): bool
+    {
+        return strtotime($this->value);
     }
-
 }

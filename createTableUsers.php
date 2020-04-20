@@ -5,9 +5,10 @@ require_once 'vendor/autoload.php';
 use App\Database\Database;
 
 $database = new Database;
-$pdo = $database->pdo;
+$pdo = $database->getPDO();
 
-function tableExists(PDO $pdo, string $table): bool {
+function tableExists(PDO $pdo, string $table): bool
+{
     try {
         $result = $pdo->query("SELECT 1 FROM $table LIMIT 1");
     } catch (\Exception $e) {

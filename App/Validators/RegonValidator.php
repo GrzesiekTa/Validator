@@ -4,12 +4,13 @@ namespace App\Validators;
 
 use App\Validators\AbstractValidator;
 
-class RegonValidator extends AbstractValidator {
+class RegonValidator extends AbstractValidator
+{
 
     /**
      * validator key
      */
-    CONST KEY = 'regon';
+    const KEY = 'regon';
 
     /**
      * @var string 
@@ -21,7 +22,8 @@ class RegonValidator extends AbstractValidator {
      * 
      * @return bool
      */
-    public function valid(): bool {
+    public function valid(): bool
+    {
         if (strlen($this->value) != 9) {
             return false;
         }
@@ -33,12 +35,11 @@ class RegonValidator extends AbstractValidator {
         }
         $int = $intSum % 11;
         $intControlNr = ($int == 10) ? 0 : $int;
-        
+
         if ($intControlNr == $this->value[8]) {
             return true;
         }
-        
+
         return false;
     }
-
 }

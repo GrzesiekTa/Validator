@@ -4,12 +4,13 @@ namespace App\Validators;
 
 use App\Validators\AbstractValidator;
 
-class RequiredValidator extends AbstractValidator {
+class RequiredValidator extends AbstractValidator
+{
 
     /**
      * validator key
      */
-    CONST KEY = 'required';
+    const KEY = 'required';
 
     /**
      * @var string 
@@ -21,7 +22,8 @@ class RequiredValidator extends AbstractValidator {
      * 
      * @return bool
      */
-    public function valid(): bool {
+    public function valid(): bool
+    {
         $value = $this->value;
 
         if (!is_array($value)) {
@@ -39,7 +41,7 @@ class RequiredValidator extends AbstractValidator {
                     return false;
                 }
             }
-            
+
             //empty array return false
             if (empty(array_filter($value))) {
                 return false;
@@ -51,5 +53,4 @@ class RequiredValidator extends AbstractValidator {
             return false;
         }
     }
-
 }

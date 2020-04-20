@@ -20,7 +20,8 @@ use App\Validators\MaxFileSizeValidator;
 use App\Validators\UniqueValidator;
 use App\Validators\EmailValidator;
 
-class ValidatorCollection {
+class ValidatorCollection
+{
 
     /**
      * validators collection
@@ -52,14 +53,15 @@ class ValidatorCollection {
      * 
      * @param string $key
      * @return string
+     * 
      * @throws \Exception
      */
-    public function getValidatorClassByKey($key) {
+    public function getValidatorClassByKey($key): string
+    {
         if (isset($this->validators[$key])) {
             return $this->validators[$key];
         }
 
         throw new \Exception("Invalid validator $key value");
     }
-
 }

@@ -4,12 +4,13 @@ namespace App\Validators;
 
 use App\Validators\AbstractValidator;
 
-class Year18Validator extends AbstractValidator {
+class Year18Validator extends AbstractValidator
+{
 
     /**
      * validator key
      */
-    CONST KEY = 'year18';
+    const KEY = 'year18';
 
     /**
      * @var string 
@@ -21,7 +22,8 @@ class Year18Validator extends AbstractValidator {
      * 
      * @return bool
      */
-    public function valid(): bool {
+    public function valid(): bool
+    {
         $value = $this->value;
 
         if (!filter_var($value, FILTER_VALIDATE_INT)) {
@@ -36,5 +38,4 @@ class Year18Validator extends AbstractValidator {
             }
         }
     }
-
 }

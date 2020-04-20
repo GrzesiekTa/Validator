@@ -22,7 +22,7 @@ class HasIntegerValidator extends AbstractValidator {
      * @return bool
      */
     public function valid(): bool {
-        return ctype_alnum($rhis->value);
+        return ctype_alnum($this->value);
     }
 
 }

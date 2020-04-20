@@ -4,12 +4,13 @@ namespace App\Validators;
 
 use App\Validators\AbstractValidator;
 
-class PostCodeValidator extends AbstractValidator {
+class PostCodeValidator extends AbstractValidator
+{
 
     /**
      * validator key
      */
-    CONST KEY = 'postCode';
+    const KEY = 'postCode';
 
     /**
      * @var string 
@@ -21,9 +22,9 @@ class PostCodeValidator extends AbstractValidator {
      * 
      * @return bool
      */
-    public function valid(): bool {
+    public function valid(): bool
+    {
         $value = preg_replace("([-]+)", "", $this->value);
         return preg_match('/^[0-9]{2}-?[0-9]{3}$/Du', $value);
     }
-
 }

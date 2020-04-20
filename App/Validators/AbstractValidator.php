@@ -4,7 +4,8 @@ namespace App\Validators;
 
 use App\Database\Database;
 
-abstract class AbstractValidator {
+abstract class AbstractValidator
+{
 
     /**
      * default error message for validator
@@ -41,7 +42,8 @@ abstract class AbstractValidator {
      * @param string $satisfier
      * @param array $validateItems
      */
-    public function __construct(string $field, $value, string $satisfier, array $validateItems) {
+    public function __construct(string $field, $value, string $satisfier, array $validateItems)
+    {
         $this->field = $field;
         $this->value = $value;
         $this->satisfier = $satisfier;
@@ -53,7 +55,8 @@ abstract class AbstractValidator {
      * 
      * @return string
      */
-    public function getErrorMessage(): string {
+    public function getErrorMessage(): string
+    {
         return $this->errorMessage;
     }
 
@@ -69,10 +72,11 @@ abstract class AbstractValidator {
      * 
      * @return boolean
      */
-    public function valueIsEmpty(): bool {
+    public function valueIsEmpty(): bool
+    {
         $value = $this->value;
 
-        if ((is_array($value) && empty(array_filter($value)) ) || (!is_array($value) && trim($value) == '')) {
+        if ((is_array($value) && empty(array_filter($value))) || (!is_array($value) && trim($value) == '')) {
             return true;
         } else {
             return false;
@@ -84,8 +88,8 @@ abstract class AbstractValidator {
      * 
      * @return Database
      */
-    protected function getDataBase(): Database {
+    protected function getDataBase(): Database
+    {
         return new Database;
     }
-
 }

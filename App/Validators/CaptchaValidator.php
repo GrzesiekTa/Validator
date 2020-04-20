@@ -4,24 +4,26 @@ namespace App\Validators;
 
 use App\Validators\AbstractValidator;
 
-class CaptchaValidator extends AbstractValidator {
+class CaptchaValidator extends AbstractValidator
+{
 
     /**
      * validator key
      */
-    CONST KEY = 'captcha';
+    const KEY = 'captcha';
 
     /**
      * @var string 
      */
-    protected $errorMessage = 'Potwierdz ¿e nie jesteœ botem';
+    protected $errorMessage = 'Potwierdz ze nie jestes botem';
 
     /**
      * valid value 
      * 
      * @return bool
      */
-    public function valid(): bool {
+    public function valid(): bool
+    {
         if (in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1'))) {
             $sekret = "6Lci3BoTAAAAAKBdjxF-5gyYkCX9UtSvZYW_Gx71"; //localhost
         } else {
@@ -36,5 +38,4 @@ class CaptchaValidator extends AbstractValidator {
             return false;
         }
     }
-
 }

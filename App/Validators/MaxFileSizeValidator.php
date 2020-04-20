@@ -4,12 +4,13 @@ namespace App\Validators;
 
 use App\Validators\AbstractValidator;
 
-class MaxFileSizeValidator extends AbstractValidator {
+class MaxFileSizeValidator extends AbstractValidator
+{
 
     /**
      * validator key
      */
-    CONST KEY = 'maxFileSize';
+    const KEY = 'maxFileSize';
 
     /**
      * @var string 
@@ -21,7 +22,8 @@ class MaxFileSizeValidator extends AbstractValidator {
      * 
      * @return bool
      */
-    public function valid(): bool {
+    public function valid(): bool
+    {
         $field = $this->field;
 
         if (!isset($_FILES[$field]["size"])) {
@@ -34,5 +36,4 @@ class MaxFileSizeValidator extends AbstractValidator {
 
         return true;
     }
-
 }

@@ -4,25 +4,26 @@ namespace App\Validators;
 
 use App\Validators\AbstractValidator;
 
-class IntegerValidator extends AbstractValidator {
+class IntegerValidator extends AbstractValidator
+{
 
     /**
      * validator key
      */
-    CONST KEY = 'isInteger';
+    const KEY = 'isInteger';
 
     /**
      * @var string 
      */
-    protected $errorMessage = 'To pole musi byc liczba…';
+    protected $errorMessage = 'To pole musi byc liczba';
 
     /**
      * valid value 
      * 
      * @return bool
      */
-    public function valid(): bool {
+    public function valid(): bool
+    {
         return filter_var($this->value, FILTER_VALIDATE_INT);
     }
-
 }

@@ -4,12 +4,13 @@ namespace App\Validators;
 
 use App\Validators\AbstractValidator;
 
-class EmailValidator extends AbstractValidator {
+class EmailValidator extends AbstractValidator
+{
 
     /**
      * validator key
      */
-    CONST KEY = 'email';
+    const KEY = 'email';
 
     /**
      * @var string 
@@ -21,8 +22,8 @@ class EmailValidator extends AbstractValidator {
      * 
      * @return bool
      */
-    public function valid(): bool {
+    public function valid(): bool
+    {
         return filter_var($this->value, FILTER_VALIDATE_EMAIL);
     }
-
 }

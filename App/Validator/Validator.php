@@ -6,13 +6,15 @@ use App\ErrorHandler\ErrorHandler;
 use App\Validators\RequiredValidator;
 use App\Validator\ValidatorCollection;
 
-function dump($asd) {
+function dump($asd)
+{
     echo '<pre>';
     var_dump($asd);
     echo '</pre>';
 }
 
-class Validator {
+class Validator
+{
 
     /**
      * @var array
@@ -42,7 +44,8 @@ class Validator {
      * @param ErrorHandler $errorHandler
      * @param ValidatorCollection $validatorCollection
      */
-    function __construct(ErrorHandler $errorHandler, ValidatorCollection $validatorCollection) {
+    function __construct(ErrorHandler $errorHandler, ValidatorCollection $validatorCollection)
+    {
         $this->errorHandler = $errorHandler;
         $this->validatorCollection = $validatorCollection;
     }
@@ -55,7 +58,8 @@ class Validator {
      * 
      * @return Validator
      */
-    public function check(array $validateItems, array $rules): Validator {
+    public function check(array $validateItems, array $rules): Validator
+    {
         is_array($this->validateItems) ? array_merge($validateItems, $this->validateItems) : $this->validateItems = $validateItems;
 
         foreach ($rules as $itemName => $requireRuleString) {
@@ -84,12 +88,20 @@ class Validator {
      * 
      * @return void
      */
-    public function addCustomErrrorMessages(array $customErrors): void {
+    public function addCustomErrrorMessages(array $customErrors): void
+    {
         $this->customErrors = $customErrors;
     }
-
-    public function oldValue(string $value) {
-        echo $this->validateItems[$value] ?? '';
+    /**
+     * get old string value
+     *
+     * @param string $value
+     * 
+     * @return string
+     */
+    public function oldStringValue(string $value): string
+    {
+        return $this->validateItems[$value] ?? '';
     }
 
     /**
@@ -99,7 +111,8 @@ class Validator {
      * 
      * @param string $itemName
      */
-    public function selectOldValue($value, string $itemName) {
+    public function selectOldValue($value, string $itemName)
+    {
         if (isset($this->validateItems[$itemName]) && $this->validateItems[$itemName] == $value) {
             echo 'selected';
         }
@@ -110,7 +123,8 @@ class Validator {
      *
      * @return bool
      */
-    public function fails(): bool {
+    public function fails(): bool
+    {
         return $this->errorHandler->hasErrors();
     }
 
@@ -119,7 +133,8 @@ class Validator {
      * 
      * @return ErrorHandler
      */
-    public function errors(): ErrorHandler {
+    public function errors(): ErrorHandler
+    {
         return $this->errorHandler;
     }
 
@@ -130,7 +145,8 @@ class Validator {
      * 
      * @return string|null
      */
-    private function getCustomMessage(string $field, $rule): ?string {
+    private function getCustomMessage(string $field, $rule): ?string
+    {
         return $this->customErrors[$field][$rule] ?? null;
     }
 
@@ -139,7 +155,8 @@ class Validator {
      * 
      * @param array $item
      */
-    protected function validate(array $item): void {
+    protected function validate(array $item): void
+    {
         $field = $item['field'];
         //set default require value if not exists
         if (!isset($item['rules']['required'])) {
@@ -148,7 +165,6 @@ class Validator {
 
         $item['rules']['required'] = in_array($item['rules']['required'], ['true', '1']) ? true : false;
 
-        //walidator odpalany jest tylko w przypadku gdy pole ma require true lub require false ale nie jest puste
         if ($this->checkRunValidators($item['rules']['required'], $item['value'])) {
             foreach ($item['rules'] as $rule => $satisfier) {
                 $validatorFromCollection = $this->validatorCollection->getValidatorClassByKey($rule);
@@ -158,7 +174,8 @@ class Validator {
 
                 if (!$validator->valid()) {
                     $this->errorHandler->addError(
-                            str_replace([':field', ':satisfier'], [$field, $satisfier], $errorMessage), $field
+                        str_replace([':field', ':satisfier'], [$field, $satisfier], $errorMessage),
+                        $field
                     );
                 }
             }
@@ -173,7 +190,8 @@ class Validator {
      * 
      * @return boolean
      */
-    private function checkRunValidators(bool $require, $value): bool {
+    private function checkRunValidators(bool $require, $value): bool
+    {
         if ($require) {
             return true;
         }
@@ -182,7 +200,4 @@ class Validator {
 
         return $requiredValidator->valueIsEmpty();
     }
-
 }
-
-?>

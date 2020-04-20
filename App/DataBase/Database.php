@@ -4,7 +4,8 @@ namespace App\Database;
 
 use PDO;
 
-class Database {
+class Database
+{
 
     /**
      * @var string
@@ -39,9 +40,10 @@ class Database {
     /**
      * @var PDO - object
      */
-    public $pdo;
+    protected $pdo;
 
-    public function __construct() {
+    public function __construct()
+    {
         try {
             $this->pdo = new PDO("mysql:host=$this->host;dbname=$this->db", $this->username, $this->password);
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -52,19 +54,30 @@ class Database {
             die("Blad polaczenia z baza danych ! skontaktuj sie z adminem");
         }
     }
+    /**
+     * get PDO
+     *
+     * @return PDO
+     */
+    public function getPDO(): PDO
+    {
+        return $this->pdo;
+    }
 
     /**
      * @param string $table
      * 
      * @return $this
      */
-    public function table(string $table): Database {
+    public function table(string $table): Database
+    {
         $this->table = $table;
 
         return $this;
     }
 
-    public function exists($data) {
+    public function exists(array $data): bool
+    {
         $field = array_keys($data)[0];
 
         return $this->where($field, '=', $data[$field])->count() ? true : false;
@@ -78,7 +91,8 @@ class Database {
      * 
      * @return $this
      */
-    public function where(string $field, string $operator, ?string $value): Database {
+    public function where(string $field, string $operator, ?string $value): Database
+    {
         $sql = "SELECT * FROM {$this->table} WHERE {$field} {$operator} ?";
         $this->stmt = $this->pdo->prepare($sql);
         $this->stmt->execute([$value]);
@@ -90,10 +104,8 @@ class Database {
      * 
      * @return int
      */
-    public function count() {
+    public function count()
+    {
         return $this->stmt->rowCount();
     }
-
 }
-
-?>

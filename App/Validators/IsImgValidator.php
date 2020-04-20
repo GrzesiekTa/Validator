@@ -4,12 +4,13 @@ namespace App\Validators;
 
 use App\Validators\AbstractValidator;
 
-class IsImgValidator extends AbstractValidator {
+class IsImgValidator extends AbstractValidator
+{
 
     /**
      * validator key
      */
-    CONST KEY = 'isImg';
+    const KEY = 'isImg';
 
     /**
      * @var string 
@@ -21,7 +22,8 @@ class IsImgValidator extends AbstractValidator {
      * 
      * @return bool
      */
-    public function valid(): bool {
+    public function valid(): bool
+    {
         $field = $this->field;
 
         if (!isset($_FILES[$field]["type"])) {
@@ -34,5 +36,4 @@ class IsImgValidator extends AbstractValidator {
 
         return true;
     }
-
 }

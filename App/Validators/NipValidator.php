@@ -4,12 +4,13 @@ namespace App\Validators;
 
 use App\Validators\AbstractValidator;
 
-class NipValidator extends AbstractValidator {
+class NipValidator extends AbstractValidator
+{
 
     /**
      * validator key
      */
-    CONST KEY = 'nip';
+    const KEY = 'nip';
 
     /**
      * @var string 
@@ -21,7 +22,8 @@ class NipValidator extends AbstractValidator {
      * 
      * @return bool
      */
-    public function valid(): bool {
+    public function valid(): bool
+    {
         $value = preg_replace("/[^0-9]+/", "", $this->value);
         if (strlen($value) != 10) {
             return false;
@@ -43,5 +45,4 @@ class NipValidator extends AbstractValidator {
 
         return false;
     }
-
 }
