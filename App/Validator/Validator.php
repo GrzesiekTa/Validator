@@ -2,7 +2,7 @@
 
 namespace App\Validator;
 
-use App\ErrorHandler\ErrorHandler;
+use App\ErrorHandler\AbstractErrorHandler;
 use App\Validators\RequiredValidator;
 use App\Validator\ValidatorCollection;
 
@@ -22,7 +22,7 @@ class Validator
     protected $customErrors = [];
 
     /**
-     * @var ErrorHandler 
+     * @var AbstractErrorHandler 
      */
     protected $errorHandler;
 
@@ -41,10 +41,10 @@ class Validator
     protected $validateItems;
 
     /**
-     * @param ErrorHandler $errorHandler
+     * @param AbstractErrorHandler $errorHandler
      * @param ValidatorCollection $validatorCollection
      */
-    function __construct(ErrorHandler $errorHandler, ValidatorCollection $validatorCollection)
+    function __construct(AbstractErrorHandler $errorHandler, ValidatorCollection $validatorCollection)
     {
         $this->errorHandler = $errorHandler;
         $this->validatorCollection = $validatorCollection;
@@ -129,11 +129,11 @@ class Validator
     }
 
     /**
-     * error handler
+     * get error handler
      * 
-     * @return ErrorHandler
+     * @return AbstractErrorHandler
      */
-    public function errors(): ErrorHandler
+    public function getErrorHandler(): AbstractErrorHandler
     {
         return $this->errorHandler;
     }
@@ -145,7 +145,7 @@ class Validator
      * 
      * @return string|null
      */
-    private function getCustomMessage(string $field, $rule): ?string
+    private function getCustomMessage(string $field, string $rule): ?string
     {
         return $this->customErrors[$field][$rule] ?? null;
     }
