@@ -4,14 +4,14 @@ require_once '../vendor/autoload.php';
 use App\ErrorHandler\ErrorHandler;
 use App\Validator\Validator;
 use App\Database\Database;
-use App\Validator\ValidatorCollection;
+use App\Validator\ValidatorsCollection;
 
 $errorHandler = new ErrorHandler;
 $database = new Database;
-$validatorCollection = new ValidatorCollection();
+$validatorsCollection = new ValidatorsCollection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $validator = new Validator($errorHandler, $validatorCollection);
+    $validator = new Validator($errorHandler, $validatorsCollection, $database);
 
     $validation = $validator->addCustomErrrorMessages([
         'nick' => [

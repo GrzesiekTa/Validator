@@ -24,6 +24,10 @@ class IntegerValidator extends AbstractValidator
      */
     public function valid(): bool
     {
-        return filter_var($this->value, FILTER_VALIDATE_INT);
+        if (filter_var($this->value, FILTER_VALIDATE_INT) === false) {
+            return false;
+        }
+
+        return true;
     }
 }

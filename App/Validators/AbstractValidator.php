@@ -35,6 +35,10 @@ abstract class AbstractValidator
      * @var array 
      */
     protected $validateItems;
+    /**
+     * @var Database|null
+     */
+    protected $dataBase;
 
     /**
      * @param string $field
@@ -84,12 +88,24 @@ abstract class AbstractValidator
     }
 
     /**
+     * set DataBase
+     *
+     * @param Database $database
+     * 
+     * @return void
+     */
+    public function setDataBase(Database $database): void
+    {
+        $this->dataBase = $database;
+    }
+
+    /**
      * get data base connection
      * 
      * @return Database
      */
     protected function getDataBase(): Database
     {
-        return new Database;
+        return $this->dataBase;
     }
 }

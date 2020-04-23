@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Tests\ErrorHandler;
 
 use PHPUnit\Framework\TestCase;
 use App\ErrorHandler\ErrorHandler;

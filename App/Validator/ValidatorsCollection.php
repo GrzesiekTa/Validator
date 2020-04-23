@@ -19,8 +19,9 @@ use App\Validators\DateValidator;
 use App\Validators\MaxFileSizeValidator;
 use App\Validators\UniqueValidator;
 use App\Validators\EmailValidator;
+use App\Validators\YearOfBirthValidator;
 
-class ValidatorCollection
+class ValidatorsCollection
 {
 
     /**
@@ -46,6 +47,7 @@ class ValidatorCollection
         MaxFileSizeValidator::KEY => MaxFileSizeValidator::class,
         UniqueValidator::KEY => UniqueValidator::class,
         EmailValidator::KEY => EmailValidator::class,
+        YearOfBirthValidator::KEY => YearOfBirthValidator::class
     ];
 
     /**
@@ -56,7 +58,7 @@ class ValidatorCollection
      * 
      * @throws \Exception
      */
-    public function getValidatorClassByKey($key): string
+    public function getValidatorClassByKey(string $key): string
     {
         if (isset($this->validators[$key])) {
             return $this->validators[$key];

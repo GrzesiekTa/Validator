@@ -4,7 +4,9 @@ namespace App\Validator;
 
 use App\ErrorHandler\AbstractErrorHandler;
 use App\Validators\RequiredValidator;
-use App\Validator\ValidatorCollection;
+use App\Validator\ValidatorsCollection;
+use App\Database\Database;
+use App\Validators\AbstractValidator;
 
 function dump($asd)
 {
@@ -22,16 +24,16 @@ class Validator
     protected $customErrors = [];
 
     /**
-     * @var AbstractErrorHandler 
+     * @var AbstractErrorHandler - object
      */
     protected $errorHandler;
 
     /**
-     * validator collection
+     * validators collection
      *
-     * @var array
+     * @var ValidatorsCollection - object
      */
-    protected $validatorCollection;
+    protected $validatorsCollection;
 
     /**
      * validate items 
@@ -42,12 +44,14 @@ class Validator
 
     /**
      * @param AbstractErrorHandler $errorHandler
-     * @param ValidatorCollection $validatorCollection
+     * @param ValidatorsCollection $validatorsCollection
+     * @param Database $database
      */
-    function __construct(AbstractErrorHandler $errorHandler, ValidatorCollection $validatorCollection)
+    function __construct(AbstractErrorHandler $errorHandler, ValidatorsCollection $validatorsCollection, Database $database)
     {
         $this->errorHandler = $errorHandler;
-        $this->validatorCollection = $validatorCollection;
+        $this->validatorsCollection = $validatorsCollection;
+        $this->database = $database;
     }
 
     /**
@@ -167,8 +171,12 @@ class Validator
 
         if ($this->checkRunValidators($item['rules']['required'], $item['value'])) {
             foreach ($item['rules'] as $rule => $satisfier) {
-                $validatorFromCollection = $this->validatorCollection->getValidatorClassByKey($rule);
+                $validatorFromCollection = $this->validatorsCollection->getValidatorClassByKey($rule);
+
+                /** @var AbstractValidator $validator */
                 $validator = new $validatorFromCollection($field, $item['value'], $satisfier, $this->validateItems);
+                $validator->setDataBase($this->database);
+
                 //get custom error message or default 
                 $errorMessage = $this->customErrors[$field][$rule] ?? $validator->getErrorMessage();
 
